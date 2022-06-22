@@ -39,6 +39,8 @@ const byte ttl1 = 14;
 const byte ttl2 = 16;
 const byte ttl3 = 15;
 
+const byte onboardled = 13;
+
 
 /* PINS:
 5 Solenoid left (from back)/ right (from front)/yellow/plus
@@ -59,6 +61,9 @@ void setup() {
   pinMode(sol2, OUTPUT);
   pinMode(sol3, OUTPUT);
   pinMode(lickttl, OUTPUT);
+
+  pinMode(onboardled, OUTPUT);
+  digitalWrite(onboardled, HIGH);
   
   pinMode(but3, INPUT);
   
@@ -74,7 +79,8 @@ void setup() {
   
   Wire.begin();
   mpr121_setup();
-  
+  delay(1000);
+  digitalWrite(onboardled, LOW);
 //  Serial.begin(9600);
 }
 
@@ -139,30 +145,36 @@ void checkSolenoids() {
   if (onSolenoidP && now - TonSolenoidP > SOLPTIME && digitalRead(ttl1) == LOW && digitalRead(but1) == LOW) {
     onSolenoidP = false;
     digitalWrite(sol1, false);
+    digitalWrite(onboardled, LOW);
   }
   else if (onSolenoidM && now - TonSolenoidM > SOLMTIME && digitalRead(ttl3) == LOW && digitalRead(but3) == LOW) {
     onSolenoidM = false;
     digitalWrite(sol3, false);
+    digitalWrite(onboardled, LOW);
   }
   else if (onSolenoidN && now - TonSolenoidN > SOLNTIME && digitalRead(ttl2) == LOW && digitalRead(but2) == LOW) {
     onSolenoidN = false;
     digitalWrite(sol2, false);
+    digitalWrite(onboardled, LOW);
   }
   
   else if (!onSolenoidP && !onSolenoidM && !onSolenoidN && (digitalRead(ttl1) == HIGH || digitalRead(but1) == HIGH)) {
     onSolenoidP = true;
     digitalWrite(sol1, true);
     TonSolenoidP = now;
+    digitalWrite(onboardled, HIGH);
   }
   else if (!onSolenoidP && !onSolenoidM && !onSolenoidN && (digitalRead(ttl3) == HIGH || digitalRead(but3) == HIGH)) {
     onSolenoidM = true;
     digitalWrite(sol3, true);
     TonSolenoidM = now;
+    digitalWrite(onboardled, HIGH);
   }
   else if (!onSolenoidP && !onSolenoidM && !onSolenoidN && (digitalRead(ttl2) == HIGH || digitalRead(but2) == HIGH)) {
     onSolenoidN = true;
     digitalWrite(sol2, true);
     TonSolenoidN = now;
+    digitalWrite(onboardled, HIGH);
   }
 }
 
