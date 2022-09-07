@@ -5,7 +5,7 @@
 //#define LICKMIN 60
 //#define DISPMIN 50
 //#define DEBOUNCE 50
-#define LICKTIME 100
+#define LICKTIME 10
 #define SOLMTIME 10
 #define SOLNTIME 10
 #define SOLPTIME 10
