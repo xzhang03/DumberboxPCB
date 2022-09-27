@@ -38,6 +38,9 @@ const byte lickled = 6;
 const byte ttl1 = 14;
 const byte ttl2 = 16;
 const byte ttl3 = 15;
+const byte ledsol1 = 20;
+const byte ledsol2 = 19;
+const byte ledsol3 = 18;
 
 const byte onboardled = 13;
 
@@ -60,6 +63,9 @@ void setup() {
   pinMode(sol1, OUTPUT);
   pinMode(sol2, OUTPUT);
   pinMode(sol3, OUTPUT);
+  pinMode(ledsol1, OUTPUT);
+  pinMode(ledsol2, OUTPUT);
+  pinMode(ledsol3, OUTPUT);
   pinMode(lickttl, OUTPUT);
 
   pinMode(onboardled, OUTPUT);
@@ -80,7 +86,6 @@ void setup() {
   Wire.begin();
   mpr121_setup();
   delay(1000);
-  digitalWrite(onboardled, LOW);
 //  Serial.begin(9600);
 }
 
@@ -145,36 +150,36 @@ void checkSolenoids() {
   if (onSolenoidP && now - TonSolenoidP > SOLPTIME && digitalRead(ttl1) == LOW && digitalRead(but1) == LOW) {
     onSolenoidP = false;
     digitalWrite(sol1, false);
-    digitalWrite(onboardled, LOW);
+    digitalWrite(ledsol1, LOW);
   }
   else if (onSolenoidM && now - TonSolenoidM > SOLMTIME && digitalRead(ttl3) == LOW && digitalRead(but3) == LOW) {
     onSolenoidM = false;
     digitalWrite(sol3, false);
-    digitalWrite(onboardled, LOW);
+    digitalWrite(ledsol3, LOW);
   }
   else if (onSolenoidN && now - TonSolenoidN > SOLNTIME && digitalRead(ttl2) == LOW && digitalRead(but2) == LOW) {
     onSolenoidN = false;
     digitalWrite(sol2, false);
-    digitalWrite(onboardled, LOW);
+    digitalWrite(ledsol2, LOW);
   }
   
   else if (!onSolenoidP && !onSolenoidM && !onSolenoidN && (digitalRead(ttl1) == HIGH || digitalRead(but1) == HIGH)) {
     onSolenoidP = true;
     digitalWrite(sol1, true);
     TonSolenoidP = now;
-    digitalWrite(onboardled, HIGH);
+    digitalWrite(ledsol1, HIGH);
   }
   else if (!onSolenoidP && !onSolenoidM && !onSolenoidN && (digitalRead(ttl3) == HIGH || digitalRead(but3) == HIGH)) {
     onSolenoidM = true;
     digitalWrite(sol3, true);
     TonSolenoidM = now;
-    digitalWrite(onboardled, HIGH);
+    digitalWrite(ledsol3, HIGH);
   }
   else if (!onSolenoidP && !onSolenoidM && !onSolenoidN && (digitalRead(ttl2) == HIGH || digitalRead(but2) == HIGH)) {
     onSolenoidN = true;
     digitalWrite(sol2, true);
     TonSolenoidN = now;
-    digitalWrite(onboardled, HIGH);
+    digitalWrite(ledsol2, HIGH);
   }
 }
 
