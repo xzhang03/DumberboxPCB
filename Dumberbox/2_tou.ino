@@ -39,7 +39,7 @@ void checkLick() {
     digitalWrite(onboardled, false);
   }
   
-  else if (!onLick && i2click == HIGH && now - TonLick > LICKTIME/5) {
+  else if (!onLick && i2click && now - TonLick > LICKTIME/5) {
     onLick = true;
     TonLick = now;
     digitalWrite(lickttl, true);
