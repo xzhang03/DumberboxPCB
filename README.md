@@ -10,7 +10,8 @@
 ## Schematics
 ![Schematics](https://github.com/xzhang03/DumberboxPCB/blob/main/v1.25/Schematic_DumberboxPCB_2022-09-27.png)
 
-See [here](https://github.com/xzhang03/NidaqGUI/blob/master/PCBs/I2C_notes/readme.md) for I2c pinout
+## I2C pinout
+I2c is used for communicating with the lick sensor and other peripherals. See [here](https://github.com/xzhang03/NidaqGUI/blob/master/PCBs/I2C_notes/readme.md) for I2c pinout
 
 ## Footprint
 ![Footprint](https://github.com/xzhang03/DumberboxPCB/blob/main/v1.25/board_footprint.png)
