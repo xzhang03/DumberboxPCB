@@ -9,7 +9,7 @@
 #define LICKTIME 10
 //#define SOLMTIME 20
 //#define SOLNTIME 20
-#define SOLPTIME 20
+#define SOLPTIME 20 // Was 50
 
 // MCP23008 settings
 #include "MCP23008.h"
