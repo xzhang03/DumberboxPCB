@@ -1,3 +1,6 @@
+// Core:
+// Arduino Itsy-bitsy 32u4
+
 
 #include "mpr121.h"
 #include <Wire.h>
