@@ -2,19 +2,29 @@
 void checkSolenoids() {
   // Sol 0, 1, 2
   for (uint8_t i = 0; i < 3; i++){
-    if (!i2clicks[1] && onSolenoids[i] && (now - TonSolenoids[i] > SOLPTIME) && (digitalRead(but_pins[i]) == LOW)) {
+    if (!dosolenoids[i] && onSolenoids[i] && (now - TonSolenoids[i] > SOLPTIME) && (digitalRead(but_pins[i]) == LOW)) {
       // ** test no i2c lick
       onSolenoids[i] = false;
       MCP.digitalWrite(mcppins[i+3], LOW);
       digitalWrite(ledsol_pins[i], LOW);
       digitalWrite(ttl_pins[i], LOW);
       digitalWrite(sol_pins[i], LOW);
+
+      #if debug
+        Serial.print(now);
+        Serial.println(" Sol timeout");
+      #endif
     }
     else if (dosolenoids[i] || (digitalRead(but_pins[i]) == HIGH)) {
       if (onSolenoids[i]){
         // Already on
         dosolenoids[i] = false;
         TonSolenoids[i] = now;
+
+        #if debug
+          Serial.print(now);
+          Serial.println(" Sol extend");
+        #endif
       }
       else {
         // Turn on
@@ -25,6 +35,11 @@ void checkSolenoids() {
         digitalWrite(ledsol_pins[i], HIGH);
         digitalWrite(ttl_pins[i], HIGH);
         MCP.digitalWrite(mcppins[i+3], HIGH);
+
+        #if debug
+          Serial.print(now);
+          Serial.println(" Sol on");
+        #endif
       }
     }
   }

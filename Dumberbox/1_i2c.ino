@@ -1,4 +1,4 @@
-void checklick(void){
+void checklickspout(void){
   byte error;
   Wire.beginTransmission(0x5A);
   error = Wire.endTransmission();

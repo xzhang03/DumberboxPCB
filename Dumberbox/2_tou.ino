@@ -26,7 +26,31 @@ bool readTouchInputs(){
   return out;
 }
 
-// Check for a lick, if found, pass on to TTL and LED
+bool readTouchInputs_live(){
+  //read the touch state from the MPR121
+  bool out = false;
+  
+  Wire.requestFrom(0x5A,2); 
+  byte LSB = Wire.read();
+  byte MSB = Wire.read();
+  uint16_t touched = ((MSB << 8) | LSB); //16bits that make up the touch states
+
+  for (int i = 0; i < 12; i++) {  // Check what electrodes were pressed
+    if(touched & (1<<i)){
+      out = true;
+      touchStates[i] = 1;      
+    }
+    else{
+      
+      touchStates[i] = 0;
+    }
+  }
+  
+  return out;
+}
+
+// Fixedlick
+// Check for a lick, if found, pass on to TTL and LED. Turn off after a timeout
 void checkLick() {
   bool i2click = readTouchInputs();
   if (onLick && now - TonLick > LICKTIME) {
@@ -50,7 +74,41 @@ void checkLick() {
   }
 }
 
-void mpr121_setup(void){
+// Livelick
+// Check for a lick, if found, pass on to TTL and LED. Turn off when lick is not detected. 
+void checkLick_live() {
+  bool i2click = readTouchInputs_live();
+//  Serial.println(i2click);
+  if (onLick && now - TonLick > LICKTIMELIVE) {
+    if (!i2click){
+      onLick = false;
+      TonLick = now;
+      digitalWrite(lickttl, false);
+      digitalWrite(lickttl2, false);
+      digitalWrite(lickled, false);
+      digitalWrite(lickled2, false);
+      digitalWrite(onboardled, false);
+//      Serial.print("OFF ");
+//      Serial.println(now);
+    }
+    
+  }
+  
+  else if (!onLick && i2click && now - TonLick > 0) {
+    onLick = true;
+    TonLick = now;
+    digitalWrite(lickttl, true);
+    digitalWrite(lickttl2, true);
+    digitalWrite(lickled, true);  
+    digitalWrite(lickled2, true);  
+    digitalWrite(onboardled, true);
+
+//    Serial.print("ON ");
+//    Serial.println(now);
+  }
+}
+
+void mpr121_setup(byte tou, byte rel){
 
   set_register(0x5A, ELE_CFG, 0x00); 
   
@@ -67,41 +125,41 @@ void mpr121_setup(void){
   set_register(0x5A, FDL_F, 0x02);
   
   // Section C - Sets touch and release thresholds for each electrode
-  set_register(0x5A, ELE0_T, TOU_THRESH);
-  set_register(0x5A, ELE0_R, REL_THRESH);
+  set_register(0x5A, ELE0_T, tou);
+  set_register(0x5A, ELE0_R, rel);
  
-  set_register(0x5A, ELE1_T, TOU_THRESH);
-  set_register(0x5A, ELE1_R, REL_THRESH);
+  set_register(0x5A, ELE1_T, tou);
+  set_register(0x5A, ELE1_R, rel);
   
-  set_register(0x5A, ELE2_T, TOU_THRESH);
-  set_register(0x5A, ELE2_R, REL_THRESH);
+  set_register(0x5A, ELE2_T, tou);
+  set_register(0x5A, ELE2_R, rel);
   
-  set_register(0x5A, ELE3_T, TOU_THRESH);
-  set_register(0x5A, ELE3_R, REL_THRESH);
+  set_register(0x5A, ELE3_T, tou);
+  set_register(0x5A, ELE3_R, rel);
   
-  set_register(0x5A, ELE4_T, TOU_THRESH);
-  set_register(0x5A, ELE4_R, REL_THRESH);
+  set_register(0x5A, ELE4_T, tou);
+  set_register(0x5A, ELE4_R, rel);
   
-  set_register(0x5A, ELE5_T, TOU_THRESH);
-  set_register(0x5A, ELE5_R, REL_THRESH);
+  set_register(0x5A, ELE5_T, tou);
+  set_register(0x5A, ELE5_R, rel);
   
-  set_register(0x5A, ELE6_T, TOU_THRESH);
-  set_register(0x5A, ELE6_R, REL_THRESH);
+  set_register(0x5A, ELE6_T, tou);
+  set_register(0x5A, ELE6_R, rel);
   
-  set_register(0x5A, ELE7_T, TOU_THRESH);
-  set_register(0x5A, ELE7_R, REL_THRESH);
+  set_register(0x5A, ELE7_T, tou);
+  set_register(0x5A, ELE7_R, rel);
   
-  set_register(0x5A, ELE8_T, TOU_THRESH);
-  set_register(0x5A, ELE8_R, REL_THRESH);
+  set_register(0x5A, ELE8_T, tou);
+  set_register(0x5A, ELE8_R, rel);
   
-  set_register(0x5A, ELE9_T, TOU_THRESH);
-  set_register(0x5A, ELE9_R, REL_THRESH);
+  set_register(0x5A, ELE9_T, tou);
+  set_register(0x5A, ELE9_R, rel);
   
-  set_register(0x5A, ELE10_T, TOU_THRESH);
-  set_register(0x5A, ELE10_R, REL_THRESH);
+  set_register(0x5A, ELE10_T, tou);
+  set_register(0x5A, ELE10_R, rel);
   
-  set_register(0x5A, ELE11_T, TOU_THRESH);
-  set_register(0x5A, ELE11_R, REL_THRESH);
+  set_register(0x5A, ELE11_T, tou);
+  set_register(0x5A, ELE11_R, rel);
   
   // Section D
   // Set the Filter Configuration

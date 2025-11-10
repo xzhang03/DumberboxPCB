@@ -10,9 +10,7 @@ bool readTouchInputs(byte address){
 
   for (int i = 0; i < 12; i++) {  // Check what electrodes were pressed
     if(touched & (1<<i)){
-      if(touchStates[i] == 0){
-        out = true;
-      }
+      out = true;
       touchStates[i] = 1;      
     }
     else{
@@ -38,28 +36,56 @@ void checkLick() {
 
 void Lickpulses(){
   for (uint8_t i = 0; i < 3; i++){
-    // Turn lick 1 off
+    // Turn lick 1 off (time out)
     if (onLicks[i] && now - TonLicks[i] > LICKTIME) {
       onLicks[i] = false;
       TonLicks[i] = now;
   
       // Pulse low
       MCP.digitalWrite(mcppins[i], LOW);
-  
+
+      #if debug
+        Serial.print(now);
+        Serial.println(" Lick timeout");
+      #endif
+      
       // If not lick between 3 spouts, turn led off
       if (!onLicks[0] && !onLicks[1] && !onLicks[2] && lickledon){
         digitalWrite(lickled, false);
         digitalWrite(lickled2, false);
         digitalWrite(onboardled, false);
         lickledon = false;
+
+        #if debug
+          Serial.print(now);
+          Serial.println(" Lick LED off");
+        #endif
       }
     }
+
+    // Must have a gap between licks
+    if (!readyfornewlicks[i]){
+      readyfornewlicks[i] = !i2clicks[i];
+      
+      if (readyfornewlicks[i]){
+        #if debug
+          Serial.print(now);
+          Serial.println(" Ready for new licks");
+        #endif
+      }
+    }
+    
     // Turn lick 1 on
-    else if (!onLicks[i] && i2clicks[i] && (now - TonLicks[i] > LICKTIME/5)) {
+    if (!onLicks[i] && readyfornewlicks[i] && i2clicks[i] && (now - TonLicks[i] > LICKTIME/5)) {
+      #if debug
+        Serial.print(now);
+        Serial.println(" Lick on");
+      #endif
       onLicks[i] = true;
       TonLicks[i] = now;
       MCP.digitalWrite(mcppins[i], HIGH);
       dosolenoids[i] = true;
+      readyfornewlicks[i] = false;
       
       if (!lickledon){
         digitalWrite(lickled, true);  

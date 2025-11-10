@@ -13,6 +13,10 @@
 #define SOLNTIME 10
 #define SOLPTIME 10
 
+// Live lick means that the lick pulse is turned off if no licks were detected
+#define uselivelicks false
+#define LICKTIMELIVE 2 //Minimal time of lick pulse
+
 bool onLick = false;
 bool onSolenoidP = false;
 bool onSolenoidN = false;
@@ -49,6 +53,9 @@ const byte ledsol3 = 18;
 
 const byte onboardled = 13;
 
+// Global Constants // sensntive at 0x08 and 0x0C, originally 0x0C and 0x10
+#define TOU_THRESH  0x0E
+#define REL_THRESH  0x12
 
 /* PINS:
 5 Solenoid left (from back)/ right (from front)/yellow/plus
@@ -92,9 +99,9 @@ void setup() {
   
   Wire.begin();
 
-  checklick();
+  checklickspout();
   
-  mpr121_setup();
+  mpr121_setup(TOU_THRESH, REL_THRESH);
   delay(1000);
 
   // Start serial
@@ -105,7 +112,12 @@ void loop() {
   // put your main code here, to run repeatedly:
   
   now = millis();
-  checkLick();
+  #if uselivelicks
+    checkLick_live();
+  #else
+    checkLick();
+  #endif
+  
   checkSolenoids();
   checkserial();
 }

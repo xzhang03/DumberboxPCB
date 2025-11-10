@@ -51,8 +51,3 @@
 #define	ATO_CFGU	0x7D
 #define	ATO_CFGL	0x7E
 #define	ATO_CFGT	0x7F
-
-
-// Global Constants // sensntive at 0x08 and 0x0C, originally 0x0C and 0x10
-#define TOU_THRESH	0x0E
-#define	REL_THRESH	0x12

@@ -4,12 +4,10 @@
 #include <Wire.h>
 
 //#define LICKMIN 60
-//#define DISPMIN 50
-//#define DEBOUNCE 50
 #define LICKTIME 10
-//#define SOLMTIME 20
-//#define SOLNTIME 20
-#define SOLPTIME 20 // Was 50
+#define SOLPTIME 20 // Was 20
+
+#define debug false
 
 // MCP23008 settings
 #include "MCP23008.h"
@@ -23,6 +21,7 @@ bool hasmprs[4] = {false, false, false, false};
 // Licks
 bool i2clicks[3] = {false, false, false};
 bool onLicks[3] = {false, false, false};
+bool readyfornewlicks[3] = {false, false, false};
 unsigned long int TonLicks[3] = {0, 0, 0};
 bool lickledon = false;
 
