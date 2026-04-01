@@ -47,7 +47,8 @@ const byte onboardled = 13;
 #define selfchecki2cout 9
 byte selfcheck;
 unsigned long int tcheck = 0;
-unsigned long int tcheckcycle = 10000;
+unsigned long int tcheckcycle = 30000;
+bool initialcheck = true;
  
 
 void setup() {
@@ -94,6 +95,13 @@ void loop() {
   checkserial();
 
   #if useselfcheck
+    if (initialcheck){
+      initialcheck = false;
+      selfcheck = i2c_selfcheck();
+      Wire.beginTransmission(selfchecki2cout); // transmit to device #9
+      Wire.write(selfcheck);      
+      Wire.endTransmission(); 
+    }
     if ((now - tcheck) >= tcheckcycle){
       tcheck = now;
       selfcheck = i2c_selfcheck();

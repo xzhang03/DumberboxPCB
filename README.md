@@ -11,13 +11,13 @@
 > Please do not use headers for mounting the microcontroller on this board since I make use of the bottom pins. I'll fix it in a future version but for now please solder the microcontrollers directly on the PCB.
 
 ## Schematics
-![Schematics](https://github.com/xzhang03/DumberboxPCB/blob/main/v1.25/Schematic_DumberboxPCB_2022-09-27.png)
+![Schematics](https://github.com/xzhang03/DumberboxPCB/blob/main/v1.3/Schematic_DumberboxPCB_2024-10-31.png)
 
 ## I2C pinout
 I2c is used for communicating with the lick sensor and other peripherals. See [here](https://github.com/xzhang03/NidaqGUI/blob/master/PCBs/I2C_notes/readme.md) for I2c pinout
 
 ## Footprint
-![Footprint](https://github.com/xzhang03/DumberboxPCB/blob/main/v1.25/board_footprint.png)
+![Footprint](https://github.com/xzhang03/DumberboxPCB/blob/main/v1.3/board_footprint.png)
 
 ## Versions
 v1.2 Fixed missing pulldown resistors and silk screen errors
