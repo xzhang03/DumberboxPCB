@@ -42,6 +42,14 @@ const byte ledsol_pins[3] = {20, 19, 18};
 
 const byte onboardled = 13;
 
+// Self check i2c
+#define useselfcheck true
+#define selfchecki2cout 9
+byte selfcheck;
+unsigned long int tcheck = 0;
+unsigned long int tcheckcycle = 10000;
+ 
+
 void setup() {
   for (uint8_t i = 0; i < 3; i++){
     pinMode(sol_pins[i], OUTPUT);
@@ -84,4 +92,14 @@ void loop() {
   Lickpulses();
   checkSolenoids();
   checkserial();
+
+  #if useselfcheck
+    if ((now - tcheck) >= tcheckcycle){
+      tcheck = now;
+      selfcheck = i2c_selfcheck();
+      Wire.beginTransmission(selfchecki2cout); // transmit to device #9
+      Wire.write(selfcheck);      
+      Wire.endTransmission(); 
+    }
+  #endif
 }

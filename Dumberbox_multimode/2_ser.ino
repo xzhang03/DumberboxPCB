@@ -13,6 +13,10 @@ void checkserial(void){
 
       case 'm': // memu
         Serial.println("m: menu");
+        Serial.println("c: self check");
+        Serial.println("h: i2c handshake");
+        Serial.println("q: all led on");
+        Serial.println("w: all led off");
         Serial.println("i: i2c scan");
         Serial.println("s: boardstate");
         Serial.println("p: test MCP");
@@ -22,6 +26,84 @@ void checkserial(void){
         Serial.println("b: Threshold = b");
         Serial.println("d: Threshold = d");
         Serial.println("f: Threshold = f");
+        break;
+
+      case 'c':
+        selfcheck = i2c_selfcheck();
+        Wire.beginTransmission(selfchecki2cout); // transmit to device #9
+        Wire.write(selfcheck);      
+        Wire.endTransmission(); 
+        Serial.print("I2c self check: ");
+        Serial.println(selfcheck, BIN);
+        break;
+
+      case 'h':
+        Wire.requestFrom(selfchecki2cout, 27); 
+        {
+          char c;
+          byte d;
+          byte i;
+          // m
+          for (byte i = 0; i < 2; i++){
+            c = Wire.read();
+            Serial.print(c);
+          }
+          d = Wire.read();
+          Serial.print(d);
+
+          // p0
+          for (i = 0; i < 4; i++){
+            c = Wire.read();
+            Serial.print(c);
+          }
+          d = Wire.read();
+          Serial.print(d);
+          d = Wire.read();
+          Serial.print(d);
+
+          // p1
+          for (i = 0; i < 4; i++){
+            c = Wire.read();
+            Serial.print(c);
+          }
+          d = Wire.read();
+          Serial.print(d);
+          d = Wire.read();
+          Serial.print(d);
+
+          // p2
+          for (i = 0; i < 4; i++){
+            c = Wire.read();
+            Serial.print(c);
+          }
+          d = Wire.read();
+          Serial.print(d);
+          d = Wire.read();
+          Serial.print(d);
+
+          // p3
+          for (i = 0; i < 4; i++){
+            c = Wire.read();
+            Serial.print(c);
+          }
+          d = Wire.read();
+          Serial.print(d);
+          d = Wire.read();
+          Serial.print(d);
+        }
+        Serial.println();
+        break;
+
+      case 'q':
+        Wire.beginTransmission(selfchecki2cout); // transmit to device #9
+        Wire.write(0B1111);      
+        Wire.endTransmission(); 
+        break;
+
+      case 'w':
+        Wire.beginTransmission(selfchecki2cout); // transmit to device #9
+        Wire.write(0B0000);      
+        Wire.endTransmission(); 
         break;
 
       case 's':
